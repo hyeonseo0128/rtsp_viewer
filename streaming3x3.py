@@ -23,7 +23,8 @@ class CaptureIpCameraFramesWorker(QThread):
 
     def run(self) -> None:
         # Capture video from a network stream.
-        cap = cv2.VideoCapture(self.url, cv2.CAP_FFMPEG)
+        # cap = cv2.VideoCapture(self.url, cv2.CAP_FFMPEG)
+        cap = cv2.VideoCapture(self.url)
         # Get default video FPS.
         self.fps = cap.get(cv2.CAP_PROP_FPS)
         print(self.url)
@@ -36,7 +37,11 @@ class CaptureIpCameraFramesWorker(QThread):
                     # Grabs, decodes and returns the next video frame.
                     ret, frame = cap.read()
                     # Get the frame height, width and channels.
-                    height, width, channels = frame.shape
+                    try:
+                        height, width, channels = frame.shape
+                    except AttributeError as err:
+                        print(err)
+
                     # Calculate the number of bytes per line.
                     bytes_per_line = width * channels
                     # If frame is read correctly.
@@ -74,11 +79,23 @@ class MainWindow(QMainWindow):
 
         # rtsp://<Username>:<Password>@<IP Address>:<Port>/cam/realmonitor?channel=1&subtype=0
         self.url_1 = "rtsp://172.30.82.102:8554/mystream"
-        self.url_4 = "rtsp://172.30.82.102:8554/mystream1"
         self.url_2 = "rtsp://172.30.82.103:8554/mystream"
-        self.url_5 = "rtsp://172.30.82.103:8554/mystream1"
         self.url_3 = "rtsp://172.30.82.104:8554/mystream"
-        self.url_6 = "rtsp://172.30.82.104:8554/mystream1"
+        self.url_4 = "rtsp://172.30.82.105:8554/mystream"
+        self.url_5 = "rtsp://172.30.82.106:8554/mystream"
+        self.url_6 = "rtsp://172.30.82.107:8554/mystream"
+        self.url_7 = "rtsp://172.30.82.108:8554/mystream"
+        self.url_8 = "rtsp://172.30.82.109:8554/mystream"
+        self.url_9 = "rtsp://172.30.82.110:8554/mystream"
+        # self.url_1 = "rtsp://admin:123456@10.252.73.31/stream0"
+        # self.url_2 = "rtsp://admin:123456@10.252.73.32/stream0"
+        # self.url_3 = "rtsp://admin:123456@10.252.73.33/stream0"
+        # self.url_4 = "rtsp://admin:123456@10.252.11.34/stream0"
+        # self.url_5 = "rtsp://admin:123456@10.252.11.35/stream0"
+        # self.url_6 = "rtsp://admin:123456@10.252.11.36/stream0"
+        # self.url_7 = "rtsp://admin:123456@10.252.11.37/stream0"
+        # self.url_8 = "rtsp://admin:123456@10.252.11.38/stream0"
+        # self.url_9 = "rtsp://admin:123456@10.252.11.39/stream0"
 
         # Dictionary to keep the state of a camera. The camera state will be: Normal or Maximized.
         self.list_of_cameras_state = {}
@@ -157,7 +174,7 @@ class MainWindow(QMainWindow):
         self.camera_6 = QLabel()
         self.camera_6.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Ignored)
         self.camera_6.setScaledContents(True)
-        self.camera_6.installEventFilter(self)
+        # self.camera_6.installEventFilter(self)
         self.camera_6.setObjectName("Camera_6")
         self.list_of_cameras_state["Camera_6"] = "Normal"
 
@@ -166,6 +183,48 @@ class MainWindow(QMainWindow):
         self.QScrollArea_6.setBackgroundRole(QPalette.Dark)
         self.QScrollArea_6.setWidgetResizable(True)
         self.QScrollArea_6.setWidget(self.camera_6)
+
+        # Create an instance of a QLabel class to show camera 7.
+        self.camera_7 = QLabel()
+        self.camera_7.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Ignored)
+        self.camera_7.setScaledContents(True)
+        # self.camera_7.installEventFilter(self)
+        self.camera_7.setObjectName("Camera_7")
+        self.list_of_cameras_state["Camera_7"] = "Normal"
+
+        # Create an instance of a QScrollArea class to scroll camera 7 image.
+        self.QScrollArea_7 = QScrollArea()
+        self.QScrollArea_7.setBackgroundRole(QPalette.Dark)
+        self.QScrollArea_7.setWidgetResizable(True)
+        self.QScrollArea_7.setWidget(self.camera_7)
+
+        # Create an instance of a QLabel class to show camera 8.
+        self.camera_8 = QLabel()
+        self.camera_8.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Ignored)
+        self.camera_8.setScaledContents(True)
+        # self.camera_8.installEventFilter(self)
+        self.camera_8.setObjectName("Camera_8")
+        self.list_of_cameras_state["Camera_8"] = "Normal"
+
+        # Create an instance of a QScrollArea class to scroll camera 8 image.
+        self.QScrollArea_8 = QScrollArea()
+        self.QScrollArea_8.setBackgroundRole(QPalette.Dark)
+        self.QScrollArea_8.setWidgetResizable(True)
+        self.QScrollArea_8.setWidget(self.camera_8)
+
+        # Create an instance of a QLabel class to show camera 9.
+        self.camera_9 = QLabel()
+        self.camera_9.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Ignored)
+        self.camera_9.setScaledContents(True)
+        # self.camera_9.installEventFilter(self)
+        self.camera_9.setObjectName("Camera_9")
+        self.list_of_cameras_state["Camera_9"] = "Normal"
+
+        # Create an instance of a QScrollArea class to scroll camera 9 image.
+        self.QScrollArea_9 = QScrollArea()
+        self.QScrollArea_9.setBackgroundRole(QPalette.Dark)
+        self.QScrollArea_9.setWidgetResizable(True)
+        self.QScrollArea_9.setWidget(self.camera_9)
 
         # Set the UI elements for this Widget class.
         self.__SetupUI()
@@ -194,6 +253,18 @@ class MainWindow(QMainWindow):
         self.CaptureIpCameraFramesWorker_6 = CaptureIpCameraFramesWorker(self.url_6)
         self.CaptureIpCameraFramesWorker_6.ImageUpdated.connect(lambda image: self.ShowCamera6(image))
 
+        # Create an instance of CaptureIpCameraFramesWorker.
+        self.CaptureIpCameraFramesWorker_7 = CaptureIpCameraFramesWorker(self.url_7)
+        self.CaptureIpCameraFramesWorker_7.ImageUpdated.connect(lambda image: self.ShowCamera7(image))
+
+        # Create an instance of CaptureIpCameraFramesWorker.
+        self.CaptureIpCameraFramesWorker_8 = CaptureIpCameraFramesWorker(self.url_8)
+        self.CaptureIpCameraFramesWorker_8.ImageUpdated.connect(lambda image: self.ShowCamera8(image))
+
+        # Create an instance of CaptureIpCameraFramesWorker.
+        self.CaptureIpCameraFramesWorker_9 = CaptureIpCameraFramesWorker(self.url_9)
+        self.CaptureIpCameraFramesWorker_9.ImageUpdated.connect(lambda image: self.ShowCamera9(image))
+
         # Start the thread getIpCameraFrameWorker_1.
         self.CaptureIpCameraFramesWorker_1.start()
 
@@ -212,6 +283,15 @@ class MainWindow(QMainWindow):
         # Start the thread getIpCameraFrameWorker_6.
         self.CaptureIpCameraFramesWorker_6.start()
 
+        # Start the thread getIpCameraFrameWorker_7.
+        self.CaptureIpCameraFramesWorker_7.start()
+
+        # Start the thread getIpCameraFrameWorker_8.
+        self.CaptureIpCameraFramesWorker_8.start()
+
+        # Start the thread getIpCameraFrameWorker_9.
+        self.CaptureIpCameraFramesWorker_9.start()
+
     def __SetupUI(self) -> None:
         # Create an instance of a QGridLayout layout.
         grid_layout = QGridLayout()
@@ -222,6 +302,9 @@ class MainWindow(QMainWindow):
         grid_layout.addWidget(self.QScrollArea_4, 1, 0)
         grid_layout.addWidget(self.QScrollArea_5, 1, 1)
         grid_layout.addWidget(self.QScrollArea_6, 1, 2)
+        grid_layout.addWidget(self.QScrollArea_7, 2, 0)
+        grid_layout.addWidget(self.QScrollArea_8, 2, 1)
+        grid_layout.addWidget(self.QScrollArea_9, 2, 2)
 
         # Create a widget instance.
         self.widget = QWidget(self)
@@ -260,117 +343,103 @@ class MainWindow(QMainWindow):
     def ShowCamera6(self, frame: QImage) -> None:
         self.camera_6.setPixmap(QPixmap.fromImage(frame))
 
-    # Override method for class MainWindow.
-    def eventFilter(self, source: QObject, event: QEvent) -> bool:
-        """
-        Method to capture the events for objects with an event filter installed.
-        :param source: The object for whom an event took place.
-        :param event: The event that took place.
-        :return: True if event is handled.
-        """
-        #
-        if event.type() == QtCore.QEvent.MouseButtonDblClick:
-            if source.objectName() == 'Camera_1':
-                #
-                if self.list_of_cameras_state["Camera_1"] == "Normal":
-                    self.QScrollArea_2.hide()
-                    self.QScrollArea_3.hide()
-                    self.QScrollArea_4.hide()
-                    self.QScrollArea_5.hide()
-                    self.QScrollArea_6.hide()
-                    self.list_of_cameras_state["Camera_1"] = "Maximized"
-                else:
-                    self.QScrollArea_2.show()
-                    self.QScrollArea_3.show()
-                    self.QScrollArea_4.show()
-                    self.QScrollArea_5.show()
-                    self.QScrollArea_6.show()
-                    self.list_of_cameras_state["Camera_1"] = "Normal"
-            elif source.objectName() == 'Camera_2':
-                #
-                if self.list_of_cameras_state["Camera_2"] == "Normal":
-                    self.QScrollArea_1.hide()
-                    self.QScrollArea_3.hide()
-                    self.QScrollArea_4.hide()
-                    self.QScrollArea_5.hide()
-                    self.QScrollArea_6.hide()
-                    self.list_of_cameras_state["Camera_2"] = "Maximized"
-                else:
-                    self.QScrollArea_1.show()
-                    self.QScrollArea_3.show()
-                    self.QScrollArea_4.show()
-                    self.QScrollArea_5.show()
-                    self.QScrollArea_6.show()
-                    self.list_of_cameras_state["Camera_2"] = "Normal"
-            elif source.objectName() == 'Camera_3':
-                #
-                if self.list_of_cameras_state["Camera_3"] == "Normal":
-                    self.QScrollArea_1.hide()
-                    self.QScrollArea_2.hide()
-                    self.QScrollArea_4.hide()
-                    self.QScrollArea_5.hide()
-                    self.QScrollArea_6.hide()
-                    self.list_of_cameras_state["Camera_3"] = "Maximized"
-                else:
-                    self.QScrollArea_1.show()
-                    self.QScrollArea_2.show()
-                    self.QScrollArea_4.show()
-                    self.QScrollArea_5.show()
-                    self.QScrollArea_6.show()
-                    self.list_of_cameras_state["Camera_3"] = "Normal"
-            elif source.objectName() == 'Camera_4':
-                #
-                if self.list_of_cameras_state["Camera_4"] == "Normal":
-                    self.QScrollArea_1.hide()
-                    self.QScrollArea_2.hide()
-                    self.QScrollArea_3.hide()
-                    self.QScrollArea_5.hide()
-                    self.QScrollArea_6.hide()
-                    self.list_of_cameras_state["Camera_4"] = "Maximized"
-                else:
-                    self.QScrollArea_1.show()
-                    self.QScrollArea_2.show()
-                    self.QScrollArea_3.show()
-                    self.QScrollArea_5.show()
-                    self.QScrollArea_6.show()
-                    self.list_of_cameras_state["Camera_4"] = "Normal"
-            elif source.objectName() == 'Camera_5':
-                #
-                if self.list_of_cameras_state["Camera_5"] == "Normal":
-                    self.QScrollArea_1.hide()
-                    self.QScrollArea_2.hide()
-                    self.QScrollArea_3.hide()
-                    self.QScrollArea_4.hide()
-                    self.QScrollArea_6.hide()
-                    self.list_of_cameras_state["Camera_5"] = "Maximized"
-                else:
-                    self.QScrollArea_1.show()
-                    self.QScrollArea_2.show()
-                    self.QScrollArea_3.show()
-                    self.QScrollArea_4.show()
-                    self.QScrollArea_6.show()
-                    self.list_of_cameras_state["Camera_5"] = "Normal"
-            elif source.objectName() == 'Camera_6':
-                #
-                if self.list_of_cameras_state["Camera_6"] == "Normal":
-                    self.QScrollArea_1.hide()
-                    self.QScrollArea_2.hide()
-                    self.QScrollArea_3.hide()
-                    self.QScrollArea_4.hide()
-                    self.QScrollArea_5.hide()
-                    self.list_of_cameras_state["Camera_6"] = "Maximized"
-                else:
-                    self.QScrollArea_1.show()
-                    self.QScrollArea_2.show()
-                    self.QScrollArea_3.show()
-                    self.QScrollArea_4.show()
-                    self.QScrollArea_5.show()
-                    self.list_of_cameras_state["Camera_6"] = "Normal"
-            else:
-                return super(MainWindow, self).eventFilter(source, event)
-            return True
-        else:
-            return super(MainWindow, self).eventFilter(source, event)
+    @QtCore.pyqtSlot()
+    def ShowCamera7(self, frame: QImage) -> None:
+        self.camera_7.setPixmap(QPixmap.fromImage(frame))
+
+    @QtCore.pyqtSlot()
+    def ShowCamera8(self, frame: QImage) -> None:
+        self.camera_8.setPixmap(QPixmap.fromImage(frame))
+
+    @QtCore.pyqtSlot()
+    def ShowCamera9(self, frame: QImage) -> None:
+        self.camera_9.setPixmap(QPixmap.fromImage(frame))
+
+    # # Override method for class MainWindow.
+    # def eventFilter(self, source: QObject, event: QEvent) -> bool:
+    #     """
+    #     Method to capture the events for objects with an event filter installed.
+    #     :param source: The object for whom an event took place.
+    #     :param event: The event that took place.
+    #     :return: True if event is handled.
+    #     """
+    #     #
+    #     if event.type() == QtCore.QEvent.MouseButtonDblClick:
+    #         if source.objectName() == 'Camera_1':
+    #             #
+    #             if self.list_of_cameras_state["Camera_1"] == "Normal":
+    #                 self.QScrollArea_2.hide()
+    #                 self.QScrollArea_3.hide()
+    #                 self.QScrollArea_4.hide()
+    #                 self.QScrollArea_5.hide()
+    #                 self.list_of_cameras_state["Camera_1"] = "Maximized"
+    #             else:
+    #                 self.QScrollArea_2.show()
+    #                 self.QScrollArea_3.show()
+    #                 self.QScrollArea_4.show()
+    #                 self.QScrollArea_5.show()
+    #                 self.list_of_cameras_state["Camera_1"] = "Normal"
+    #         elif source.objectName() == 'Camera_2':
+    #             #
+    #             if self.list_of_cameras_state["Camera_2"] == "Normal":
+    #                 self.QScrollArea_1.hide()
+    #                 self.QScrollArea_3.hide()
+    #                 self.QScrollArea_4.hide()
+    #                 self.QScrollArea_5.hide()
+    #                 self.list_of_cameras_state["Camera_2"] = "Maximized"
+    #             else:
+    #                 self.QScrollArea_1.show()
+    #                 self.QScrollArea_3.show()
+    #                 self.QScrollArea_4.show()
+    #                 self.QScrollArea_5.show()
+    #                 self.list_of_cameras_state["Camera_2"] = "Normal"
+    #         elif source.objectName() == 'Camera_3':
+    #             #
+    #             if self.list_of_cameras_state["Camera_3"] == "Normal":
+    #                 self.QScrollArea_1.hide()
+    #                 self.QScrollArea_2.hide()
+    #                 self.QScrollArea_4.hide()
+    #                 self.QScrollArea_5.hide()
+    #                 self.list_of_cameras_state["Camera_3"] = "Maximized"
+    #             else:
+    #                 self.QScrollArea_1.show()
+    #                 self.QScrollArea_2.show()
+    #                 self.QScrollArea_4.show()
+    #                 self.QScrollArea_5.show()
+    #                 self.list_of_cameras_state["Camera_3"] = "Normal"
+    #         elif source.objectName() == 'Camera_4':
+    #             #
+    #             if self.list_of_cameras_state["Camera_4"] == "Normal":
+    #                 self.QScrollArea_1.hide()
+    #                 self.QScrollArea_2.hide()
+    #                 self.QScrollArea_3.hide()
+    #                 self.QScrollArea_5.hide()
+    #                 self.list_of_cameras_state["Camera_4"] = "Maximized"
+    #             else:
+    #                 self.QScrollArea_1.show()
+    #                 self.QScrollArea_2.show()
+    #                 self.QScrollArea_3.show()
+    #                 self.QScrollArea_5.show()
+    #                 self.list_of_cameras_state["Camera_4"] = "Normal"
+    #         elif source.objectName() == 'Camera_5':
+    #             #
+    #             if self.list_of_cameras_state["Camera_5"] == "Normal":
+    #                 self.QScrollArea_1.hide()
+    #                 self.QScrollArea_2.hide()
+    #                 self.QScrollArea_3.hide()
+    #                 self.QScrollArea_4.hide()
+    #                 self.list_of_cameras_state["Camera_5"] = "Maximized"
+    #             else:
+    #                 self.QScrollArea_1.show()
+    #                 self.QScrollArea_2.show()
+    #                 self.QScrollArea_3.show()
+    #                 self.QScrollArea_4.show()
+    #                 self.list_of_cameras_state["Camera_5"] = "Normal"
+    #         else:
+    #             return super(MainWindow, self).eventFilter(source, event)
+    #         return True
+    #     else:
+    #         return super(MainWindow, self).eventFilter(source, event)
 
     # Overwrite method closeEvent from class QMainWindow.
     def closeEvent(self, event) -> None:
@@ -392,6 +461,15 @@ class MainWindow(QMainWindow):
         # If thread getIpCameraFrameWorker_6 is running, then exit it.
         if self.CaptureIpCameraFramesWorker_6.isRunning():
             self.CaptureIpCameraFramesWorker_6.quit()
+        # If thread getIpCameraFrameWorker_7 is running, then exit it.
+        if self.CaptureIpCameraFramesWorker_7.isRunning():
+            self.CaptureIpCameraFramesWorker_7.quit()
+        # If thread getIpCameraFrameWorker_8 is running, then exit it.
+        if self.CaptureIpCameraFramesWorker_8.isRunning():
+            self.CaptureIpCameraFramesWorker_8.quit()
+        # If thread getIpCameraFrameWorker_9 is running, then exit it.
+        if self.CaptureIpCameraFramesWorker_9.isRunning():
+            self.CaptureIpCameraFramesWorker_9.quit()
         # Accept the event
         event.accept()
 
